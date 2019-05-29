@@ -1348,18 +1348,93 @@ extern void pivot_stack(u32 stack_top);
 
 void filelist(char* directory, char* filet)
 {
+char* files = listfil(directory, filet, true);
+char* folder = listfol(directory, filet, true);
+	u8 max_entries = 61;
+	char *payload_path = NULL;
+
+	ini_sec_t *cfg_tmp = NULL;
+	ini_sec_t *cfg_sec = NULL;
+	LIST_INIT(ini_sections);
+
+	gfx_clear_grey(0x1B);
+	gfx_con_setpos(0, 0);
+
+	if (sd_mount())
+	{
+
+			// Build configuration menu.
+			ment_t *ments = (ment_t *)malloc(sizeof(ment_t) * (max_entries + 6));
+			
+    u32 r = 0;
+    u32 w = 0;
+	u32 i = 0;
+    while(folder[r * 256])
+    {
+			if(strlen(&folder[r * 256]) <= 100){			
+//			gfx_printf( "\n");	
+//			gfx_printf(&folder[i * 256]);
+			ments[i].type = MENT_HANDLER;
+			ments[i].caption = &folder[r * 256];
+			ments[i].data = &folder[r * 256];
+			}
+	i++;
+	r++;
+	}
+
+    while(files[w * 256])
+    {
+			if(strlen(&files[w * 256]) <= 100){			
+//			gfx_printf("\n");
+//			gfx_printf(&files[j * 256]);
+			ments[i].type = MENT_HANDLER;
+			ments[i].caption = &files[w * 256];
+			ments[i].handler = power_off;
+			}
+	i++;
+	w++;
+	}
+			memset(&ments[i], 0, sizeof(ment_t));
+			menu_t menu = {
+				ments, "File Explorer", 0, 0
+			};
+
+			tui_do_menu(&menu);
+
+
+
+				free(ments);
+				sd_unmount();
+				return;
+
+
+			free(ments);
+			ini_free(&ini_sections);
+	}
+
+
+out:
+	ini_free_section(cfg_sec);
+	sd_unmount();
+
+	btn_wait();
+
+
+
 			gfx_printf("\n");	
 			gfx_printf("SD card\n");
 			
-char* files = listfil(directory, filet, true);
-char* folder = listfol(directory, filet, true);
+/*
     u32 i = 0;
     u32 j = 0;
     while(folder[i * 256])
     {
 			if(strlen(&folder[i * 256]) <= 100){			
-			gfx_printf( "\n");	
-			gfx_printf(&folder[i * 256]);
+//			gfx_printf( "\n");	
+//			gfx_printf(&folder[i * 256]);
+			ments[i + 2].type = MENT_CAPTION;
+			ments[i + 2].caption = &folder[i * 256];
+			ments[i + 2].data = &folder[i * 256];
 			}
 	i++;
 	}
@@ -1368,14 +1443,20 @@ char* folder = listfol(directory, filet, true);
     {
 			gfx_printf("%k", 0xFF00FF22);
 			if(strlen(&files[j * 256]) <= 100){			
-			gfx_printf("\n");	
-			gfx_printf(&files[j * 256]);
+//			gfx_printf("\n");
+//			gfx_printf(&files[j * 256]);
+			ments[j + 2].type = MENT_CAPTION;
+			ments[j + 2].caption = &files[j * 256];
+			ments[j + 2].data = &files[j * 256];
+
 			gfx_printf("%k",0xFFCCCCCC);
 			
 			}
 	j++;
-    }
-			msleep(20000);
+	}
+
+				msleep(20000);
+*/
 }
 
 void ipl_main()
@@ -1444,7 +1525,6 @@ bool sd_file_exists(const char* filename)
 if(sd_mount())
 {
 
-	f_unlink("StarDust/raw.bk");
 	gfx_clear_partial_grey(0x1B, 0, 1256);
 	tui_sbar(true);
 	display_backlight_brightness(100, 1000);
