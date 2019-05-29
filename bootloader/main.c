@@ -1346,6 +1346,38 @@ menu_t menu_top = {
 
 extern void pivot_stack(u32 stack_top);
 
+void filelist(char* directory, char* filet)
+{
+			gfx_printf("\n");	
+			gfx_printf("SD card\n");
+			
+char* files = listfil(directory, filet, true);
+char* folder = listfol(directory, filet, true);
+    u32 i = 0;
+    u32 j = 0;
+    while(folder[i * 256])
+    {
+			if(strlen(&folder[i * 256]) <= 100){			
+			gfx_printf( "\n");	
+			gfx_printf(&folder[i * 256]);
+			}
+	i++;
+	}
+
+    while(files[j * 256])
+    {
+			gfx_printf("%k", 0xFF00FF22);
+			if(strlen(&files[j * 256]) <= 100){			
+			gfx_printf("\n");	
+			gfx_printf(&files[j * 256]);
+			gfx_printf("%k",0xFFCCCCCC);
+			
+			}
+	j++;
+    }
+			msleep(20000);
+}
+
 void ipl_main()
 {
 	// Do initial HW configuration. This is compatible with consecutive reruns without a reset.
@@ -1407,39 +1439,17 @@ bool sd_file_exists(const char* filename)
     return false;
 }
 
+
+
 if(sd_mount())
 {
-	if(sd_file_exists("StarDust/boot.bk"))
-	{
-	f_unlink("StarDust/boot.bk");
-	gfx_clear_partial_grey(0x1B, 0, 1256);
-	tui_sbar(true);
-	display_backlight_brightness(100, 1000);
-	dump_emmc_boot();
-	mainmenu();
-	}
-	
-	if(sd_file_exists("StarDust/raw.bk"))
-	{
+
 	f_unlink("StarDust/raw.bk");
 	gfx_clear_partial_grey(0x1B, 0, 1256);
 	tui_sbar(true);
 	display_backlight_brightness(100, 1000);
-	dump_emmc_boot();
-	dump_emmc_rawnand();
-	mainmenu();
-	}
-	
-	if(sd_file_exists("StarDust/syslite.bk"))
-	{
-	f_unlink("StarDust/syslite.bk");
-	gfx_clear_partial_grey(0x1B, 0, 1256);
-	tui_sbar(true);
-	display_backlight_brightness(100, 1000);
-	dump_emmc_boot();
-	dump_emmc_system();
-	mainmenu();
-	}
+	filelist("", "*");
+
 }
 	
 	while (true)
