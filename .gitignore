@@ -1,4 +1,8 @@
-.vs
-.vscode
-build/*
-output/*
+# Visual Studio Code
+.vs/
+.vscode/
+
+# Build files
+build/
+output/
+logo_bmp.h
