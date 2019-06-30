@@ -4,7 +4,7 @@ endif
 
 include $(DEVKITARM)/base_rules
 
-TARGET 					:= payload
+TARGET 					:= kiminonawa
 BLVERSION_MAJOR := 0
 BLVERSION_MINOR := 3
 BUILD 					:= build

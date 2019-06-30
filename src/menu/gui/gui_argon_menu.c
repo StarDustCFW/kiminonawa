@@ -39,23 +39,13 @@
 #define ELEM_SIZE 230
 #define MARGIN_TOP 100
 #define MARGIN_LEFT 46
-//static int tool_menu_rSD(void* param);
-static int tool_extr_rSD(void* param);
-
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
-static int tool_menu_rem(void* param);
-int tool_theme(char* param);
-static int tool_emu(u32 param);
-static int zbackup(char* param);
 static int tool_Menus(u32 param);
 int tool_dir(char *param);
-int tool_servises(u32 param);
-int tool_servises_on(char* title);
-int tool_servises_off(char* title);
-
 int tool_filete(char* fil);
 int tool_file_act(u32 fil);
+
 //menus
 u64 main_menu = 2;
 
@@ -72,81 +62,6 @@ u32 retir = 0;
 //dinamic directory
 char *directory = "";
 char *filete = "";
-
-/* Generate entries dynamically */
-static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
-{
-    if (payloads == NULL)
-    {
-        g_gfx_con.scale = 4;
-        gfx_con_setpos(&g_gfx_con, 140, 250);
-        gfx_printf(&g_gfx_con, "Payloads directory is empty...\n");
-        
-        g_gfx_con.scale = 3;
-        gfx_con_setpos(&g_gfx_con, 110, 370);
-        gfx_printf(&g_gfx_con, "Place your payloads inside \"%s\"", PAYLOADS_DIR);
-
-        return;
-    }
-
-    u32 i = 0;
-    /* For each payload generate its logo, its name and its path */
-    while(payloads[i * 256])
-    {
-        char* payload_path = (char*)malloc(256);
-        payload_full_path(&payloads[i * 256], payload_path);
-        
-        char payload_logo[256];
-        payload_logo_path(&payloads[i * 256], payload_logo);
-
-			u32 row = i;
-        u32 col = i % COLUMNS;
-        u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
-        u32 y = 140 / ROWS * row + MARGIN_TOP + MARGIN_TOP;
-
-        const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
-        gui_menu_append_entry(menu, 
-            gui_create_menu_entry(payload_wo_bin,
-                                    sd_file_read(payload_logo), 
-                                    x, y,
-                                    200, 200,
-                                    (int (*)(void *))launch_payload, (void*)payload_path));
-        i++;
-    }
-}
-// Second Menu 
-/*
-
-static void generate_payloads_back(char* payback, gui_menu_t* menu)
-{
-
-    u32 e = 0;
-    // For each payload generate its logo, its name and its path
-    while(payback[e * 256])
-    {
-        char* payload_path = (char*)malloc(256);
-        payload_full_back(&payback[e * 256], payload_path);
-        
-        char payload_logo[256];
-        payload_logo_path(&payback[e * 256], payload_logo);
-
-		u32 row = e / COLUMNS;
-        u32 col = e % COLUMNS;
-        u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
-        u32 y = g_gfx_ctxt.height / ROWS * row + MARGIN_TOP + (row == 0 ? 30 : -60);
-
-        const char* payload_wo_bin = str_replace(&payback[e * 256], ".bin", "");
-        gui_menu_append_entry(menu, 
-            gui_create_menu_entry(payload_wo_bin,
-                                    sd_file_read(payload_logo),
-                                    x, y,
-                                    200, 200,
-                                    (int (*)(void *))launch_payload, (void*)payload_path));
-        e++;
-	
-    }
-}
-*/
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
