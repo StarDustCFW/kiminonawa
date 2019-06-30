@@ -18,7 +18,7 @@
 
 #include "utils/types.h"
 
-#define CUSTOM_BG_PATH "StarDust/background.bmp"
+#define CUSTOM_BG_PATH "StarDust/kimi.bmp"
 #define CUSTOM_TITLE_PATH "StarDust/title.bmp"
 
 typedef struct {
