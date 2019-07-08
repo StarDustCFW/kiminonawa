@@ -62,6 +62,8 @@ u32 retir = 0;
 //dinamic directory
 char *directory = "";
 char *filete = "";
+char *filpay = "3333333333";
+
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
@@ -148,11 +150,12 @@ char* folder = listfol(directory, "*", true);
 		}
 	w++;
 	}
+
 		if(strlen(filete) >= 1)
 		{
 		u32 actX = 800;
 		u32 actY = 1;
-			if(strstr(filete,".bin") != NULL)
+/*			if(strstr(filete,".bin") != NULL)
 			{
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/launch.bmp"),actX+100, actY, 75, 75, (int (*)(void *))tool_file_act, (void*)1));
 			if(!sd_file_exists ("StarDust/Icons/launch.bmp"))
@@ -164,7 +167,7 @@ char* folder = listfol(directory, "*", true);
 			if(!sd_file_exists ("StarDust/Icons/launch.bmp"))
 			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("RUN", actX+100, actY+20, 150, 100, NULL, NULL));
 			}
-
+*/
 		//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/button.bmp"),1070, 600, 200, 75, (int (*)(void *))zbackup, (void*)"emummc.bk"));
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/StarDust/Icons/del.bmp"),actX, actY, 75, 75, (int (*)(void *))tool_file_act, (void*)0));
 			if(!sd_file_exists ("StarDust/Icons/del.bmp"))
@@ -256,6 +259,19 @@ filete = fil;
 	strcat(tmp, fil);
 filete = tmp;		
 }
+
+	if(strstr(filete,filpay) != NULL)
+	{
+		if(strstr(filete,".bin") != NULL)
+		{
+		tool_file_act(1);
+		}
+		if(strstr(filete,".BIN") != NULL)
+		{
+		tool_file_act(1);
+		}
+	}
+filpay = filete;
 gui_init_argon_menu();
 return 0;
 }
